@@ -1,0 +1,66 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(leaflet)
+```
+
+```{r}
+
+df <- data.frame(lat = runif(6, min = 37.512, max = 37.514),
+                 lng = runif(6, min = 127.028, max = 127.030),
+                 name = LETTERS[1:6],
+                 group = c(1,1,1,2,2,2))
+
+ywIcon <- makeIcon(
+  iconUrl = "https://www.ycampus.co.kr/images/common/head_logo.png",
+  iconWidth = 80, iconHeight = 20,
+  iconAnchorX = 40, iconAnchorY = 10
+)
+
+
+leaf_color <- colorFactor(c("red", "blue"), df$group)
+
+mymap <- df %>% leaflet() %>% 
+  addTiles() %>% 
+  setView(lat = 37.5138549, lng = 127.0295296, zoom = 17) %>% 
+#  addMarkers(lat = ~lat, lng = ~lng, 
+#             popup = ~name,
+#             icon = ywIcon
+  addCircles(lat = ~lat, lng = ~lng,
+             radius = 20,
+             color = ~leaf_color(group)
+             )
+
+mymap
+```
+```{r}
+df <- data.frame(lat = runif(500, min = 37.6, max = 37.8),
+                 lng = runif(500, min = 126.5, max = 127.030))
+
+ywIcon <- makeIcon(
+  iconUrl = "https://www.ycampus.co.kr/images/common/head_logo.png",
+  iconWidth = 80, iconHeight = 20,
+  iconAnchorX = 40, iconAnchorY = 10
+)
+
+
+leaf_color <- colorFactor(c("red", "blue"), df$group)
+
+mymap <- df %>% leaflet() %>% 
+  addTiles() %>% 
+#  setView(lat = 37.5138549, lng = 127.0295296, zoom = 17) %>% 
+#  addMarkers(lat = ~lat, lng = ~lng, 
+#             popup = ~name,
+#             icon = ywIcon
+  addMarkers(lat = ~lat, lng = ~lng,
+#             radius = 20,
+#             color = ~leaf_color(group),
+             clusterOptions = markerClusterOptions()
+             )
+
+mymap
+```
+
